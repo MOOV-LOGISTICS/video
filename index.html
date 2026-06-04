@@ -9,13 +9,13 @@
     :root{--orient:#004F7C;--deep:#001824;--mid:#002f4f;--orange:#FE5000;--orange2:#FEA080;--mystic:#E6EBF0;--white:#FFFFFF}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:var(--deep);display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden;font-family:'Sora',sans-serif}
-    .vc{width:min(100vw,calc(100vh*16/9));height:min(100vh,calc(100vw*9/16));position:relative;overflow:hidden;background:linear-gradient(155deg,#001824 0%,#002f4f 55%,#004F7C 100%)}
-    .bg-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:56px 56px;animation:gridBreath 7s ease-in-out infinite}
+    .vc{width:min(100vw,calc(100vh*16/9));height:min(100vh,calc(100vw*9/16));position:relative;overflow:hidden;background:radial-gradient(ellipse 130% 100% at 50% 115%,#0a2040 0%,#000d1a 50%,#000408 100%)}
+    .bg-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(0,200,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.045) 1px,transparent 1px);background-size:52px 52px;animation:gridBreath 7s ease-in-out infinite}
     @keyframes gridBreath{0%,100%{opacity:.4}50%{opacity:.9}}
-    .bg-glow{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(254,80,0,.1) 0%,transparent 70%)}
-    .bg-stripe{position:absolute;inset:0;z-index:0;background:repeating-linear-gradient(-55deg,transparent,transparent 80px,rgba(254,80,0,.015) 80px,rgba(254,80,0,.015) 81px)}
+    .bg-glow{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 70% at 50% 38%,rgba(0,180,255,.1) 0%,rgba(0,80,200,.05) 55%,transparent 80%),radial-gradient(ellipse 55% 45% at 50% 100%,rgba(0,79,124,.4) 0%,transparent 60%)}
+    .bg-stripe{position:absolute;inset:0;z-index:0;background:repeating-linear-gradient(-48deg,transparent,transparent 90px,rgba(0,140,255,.022) 90px,rgba(0,140,255,.022) 91px)}
     .bg-particles{position:absolute;inset:0;z-index:0;pointer-events:none}
-    .particle{position:absolute;border-radius:50%;background:rgba(254,80,0,.5);animation:floatUp linear infinite}
+    .particle{position:absolute;border-radius:50%;background:rgba(200,235,255,.75);animation:floatUp linear infinite}
     @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:1}90%{opacity:.4}100%{transform:translateY(-115%) scale(.5);opacity:0}}
     .g-logo{position:absolute;top:16px;left:20px;z-index:30;opacity:.9}
     .g-logo img{height:20px;width:auto}
@@ -166,31 +166,84 @@
     .s6-carriers{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:1.8em;animation:fadeUp .8s 2.3s both}
     .s6-ctag{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:5px 16px;font-size:clamp(9px,1.1vw,11px);color:rgba(255,255,255,.35);font-weight:500}
     .s6-url{font-size:clamp(9px,1.2vw,13px);color:rgba(255,255,255,.16);font-family:'DM Mono',monospace;letter-spacing:.07em;animation:fadeIn .8s 2.6s both}
+
+    .bg-curves{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+    .bwav{position:absolute;width:250%;left:-75%;border-radius:45% 55% 55% 45%;pointer-events:none}
+    .bwav1{height:65%;bottom:-30%;background:linear-gradient(170deg,transparent 30%,rgba(0,80,180,.11) 50%,transparent 70%);animation:waveDrift 20s ease-in-out infinite}
+    .bwav2{height:50%;bottom:-18%;background:linear-gradient(170deg,transparent 30%,rgba(0,120,220,.08) 50%,transparent 70%);animation:waveDrift 26s ease-in-out infinite;animation-delay:-9s}
+    .bwav3{height:38%;bottom:-8%;background:linear-gradient(170deg,transparent 30%,rgba(0,170,255,.06) 50%,transparent 70%);animation:waveDrift 22s ease-in-out infinite;animation-delay:-15s}
+    @keyframes waveDrift{0%,100%{transform:rotate(-5deg) scaleX(1) translateY(0)}40%{transform:rotate(-2deg) scaleX(1.03) translateY(-1.5%)}70%{transform:rotate(-7deg) scaleX(.97) translateY(1%)}}
+    .s1-hero{font-size:clamp(58px,11vw,140px);font-weight:900;color:#fff;letter-spacing:-.04em;line-height:.92;text-align:center;animation:s1In 1s .3s both;text-shadow:0 0 100px rgba(0,150,255,.15)}
+    @keyframes s1In{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .s1acc{background:linear-gradient(90deg,#FE5000 0%,#FF8040 50%,#FE5000 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 2.5s 1.5s linear infinite;filter:drop-shadow(0 0 20px rgba(254,80,0,.35))}
+    .s1-auto{font-size:clamp(16px,2.4vw,30px);font-weight:600;color:#00d4ff;letter-spacing:.05em;margin-top:.65em;text-align:center;animation:fadeUp .8s .85s both;text-shadow:0 0 25px rgba(0,212,255,.5)}
+    .s1-gline{width:110px;height:2px;background:linear-gradient(90deg,transparent,#004F7C,#00d4ff,#004F7C,transparent);margin:.95em auto;animation:glowLine 1s 1.2s both}
+    @keyframes glowLine{from{width:0;opacity:0}to{width:110px;opacity:1}}
+    .s1-tg2{font-size:clamp(12px,1.7vw,20px);font-weight:300;color:rgba(255,255,255,.42);text-align:center;max-width:660px;line-height:1.65;animation:fadeIn .9s 1.5s both}
+    .s1-tg2 em{color:rgba(255,255,255,.78);font-style:normal;font-weight:500}
+    .s1-badg{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,212,255,.28);background:rgba(0,212,255,.06);border-radius:100px;padding:5px 18px;font-size:clamp(9px,1vw,12px);color:rgba(255,255,255,.58);letter-spacing:.15em;text-transform:uppercase;margin-top:1.4em;animation:fadeUp .7s 2.1s both}
+
+    /* ── S2 redesigned ── */
+    .s2-eyebrow{font-size:clamp(9px,1.1vw,12px);font-weight:700;color:#f87171;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.7em;animation:fadeIn .6s .2s both}
+    .s2-headline{font-size:clamp(24px,4.2vw,52px);font-weight:800;color:var(--white);line-height:1.12;text-align:center;margin-bottom:1.4em;animation:fadeUp .7s .4s both}
+    .s2-headline .ital{font-style:italic;color:rgba(255,255,255,.5);font-weight:400}
+    .s2-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1.4vw,14px);width:100%;max-width:920px;animation:fadeUp .7s .6s both}
+    .s2-c{background:rgba(15,20,40,.6);border:1px solid rgba(239,68,68,.18);border-radius:16px;padding:clamp(16px,2.2vw,26px) clamp(12px,1.8vw,20px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;backdrop-filter:blur(8px);transition:border-color .3s}
+    .s2-c:hover{border-color:rgba(239,68,68,.35)}
+    .s2-c-iconwrap{width:clamp(48px,6vw,64px);height:clamp(48px,6vw,64px);border-radius:14px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22);display:flex;align-items:center;justify-content:center;font-size:clamp(22px,2.8vw,30px);flex-shrink:0}
+    .s2-c-num{font-size:clamp(9px,1vw,11px);font-family:'DM Mono',monospace;font-weight:700;color:rgba(239,68,68,.6);letter-spacing:.1em}
+    .s2-c-title{font-size:clamp(11px,1.4vw,16px);font-weight:700;color:var(--white);line-height:1.2}
+    .s2-c-body{font-size:clamp(9px,1.05vw,11.5px);color:rgba(255,255,255,.35);line-height:1.65}
+    .s2-c-tag{font-size:clamp(7.5px,.9vw,10px);font-weight:700;color:#f87171;letter-spacing:.08em;text-transform:uppercase;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);padding:2px 8px;border-radius:100px;margin-top:2px}
   </style>
 </head>
 <body>
 <div class="vc" id="vc">
   <div class="bg-grid"></div><div class="bg-glow"></div>
-  <div class="bg-stripe"></div><div class="bg-particles" id="particles"></div>
+  <div class="bg-stripe"></div><div class="bg-curves"><div class="bwav bwav1"></div><div class="bwav bwav2"></div><div class="bwav bwav3"></div></div><div class="bg-particles" id="particles"></div>
   <div class="g-logo"><img src="https://raw.githubusercontent.com/moov-logistics/smartallocation/main/assets/MOOV_Logo_%E7%99%BD%E6%A9%99.png" alt="MOOV"></div>
-  <div class="scene" id="s1">
-    <div class="s1-kicker">MOOV Logistics · SmartAllocation</div>
-    <div class="s1-headline"><span class="acc">Allocation</span><br>on Autopilot.</div>
-    <div class="s1-tagline">Turn <em>Supply Chain Complexity</em> into <em>Instant Action.</em></div>
-    <div class="s1-divider"></div>
-    <div class="s1-sub">Intelligent Carrier Booking Platform</div>
-    <div class="s1-badge"><span class="s1-live"></span>LIVE SYSTEM · AVG 1.8s PER LOT</div>
+    <div class="scene" id="s1">
+    <div class="s1-hero">Smart<span class="s1acc">Allocation</span></div>
+    <div class="s1-auto">Allocation on Autopilot.</div>
+    <div class="s1-gline"></div>
+    <div class="s1-tg2">Turn <em>Supply Chain Complexity</em> into <em>Instant Action.</em></div>
+    <div class="s1-badg"><span class="s1-live"></span>LIVE SYSTEM  ·  AVG 1.8s PER LOT</div>
   </div>
-  <div class="scene" id="s2">
-    <div class="s2-eyebrow">THE TRADITIONAL BOOKING PROBLEM</div>
-    <div class="s2-statement">Booking isn't a process.<br><span class="ital">It's a puzzle.</span></div>
-    <div class="s2-desc">In traditional supply chains, critical data lives in inboxes, spreadsheets, and phone calls. There is no system — only coordination overhead.</div>
-    <div class="s2-grid">
-      <div class="s2-card"><span class="s2-card-icon">📧</span><div class="s2-card-title">Fragmented Communication</div><div class="s2-card-body">Endless email threads. Carrier confirmations via WhatsApp. Allocation decisions buried in someone's inbox. Every booking requires a chain of manual back-and-forth with no audit trail.</div><div class="s2-card-tag">NO SINGLE SOURCE OF TRUTH</div></div>
-      <div class="s2-card"><span class="s2-card-icon">❌</span><div class="s2-card-title">No Visibility</div><div class="s2-card-body">Carrier allocation status unknown until it's too late. Quota overruns discovered at booking stage. ETD windows missed before the team even reacts. Your supply chain runs blind.</div><div class="s2-card-tag">DATA LOCKED IN A BLACK BOX</div></div>
+    <div class="scene" id="s2">
+    <div class="s2-eyebrow">⚠ THE TRADITIONAL BOOKING PROBLEM</div>
+    <div class="s2-headline">Booking isn't a process.<br><span class="ital">It's a puzzle.</span></div>
+    <div class="s2-grid4">
+      <div class="s2-c">
+        <div class="s2-c-iconwrap">📧</div>
+        <div class="s2-c-num">01</div>
+        <div class="s2-c-title">Inbox Booking</div>
+        <div class="s2-c-body">Carrier confirmations via email &amp; WhatsApp. No system, no audit trail — just threads.</div>
+        <div class="s2-c-tag">Fragmented</div>
+      </div>
+      <div class="s2-c">
+        <div class="s2-c-iconwrap">🗂️</div>
+        <div class="s2-c-num">02</div>
+        <div class="s2-c-title">Data Silos</div>
+        <div class="s2-c-body">Allocation lives in spreadsheets. Out of date the moment it's saved — if it's saved at all.</div>
+        <div class="s2-c-tag">No Visibility</div>
+      </div>
+      <div class="s2-c">
+        <div class="s2-c-iconwrap">⚡</div>
+        <div class="s2-c-num">03</div>
+        <div class="s2-c-title">Blind Spots</div>
+        <div class="s2-c-body">Quota overruns found at booking stage. ETD windows already closed before the team reacts.</div>
+        <div class="s2-c-tag">Too Late</div>
+      </div>
+      <div class="s2-c">
+        <div class="s2-c-iconwrap">🌊</div>
+        <div class="s2-c-num">04</div>
+        <div class="s2-c-title">Cascade Failures</div>
+        <div class="s2-c-body">One carrier change invalidates every LOT on that lane. Hundreds re-done manually.</div>
+        <div class="s2-c-tag">1,000+ LOTs/mo</div>
+      </div>
     </div>
   </div>
-  <div class="scene" id="s3">
+    <div class="scene" id="s3">
     <div class="s3-eyebrow">WITH SMARTALLOCATION</div>
     <div class="s3-headline">Booking is a <span class="acc">strictly governed,<br>data-driven process.</span></div>
     <div class="s3-sub">Our platform enforces rules, automates decisions, and creates a transparent, auditable booking chain — from PO to confirmed vessel.</div>
