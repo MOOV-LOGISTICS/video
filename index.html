@@ -3,569 +3,364 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOOV SmartAllocation — Promo Video</title>
+  <title>MOOV SmartAllocation</title>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* MOOV Brand: Orient #004F7C · Orange Aerospace #FE5000 · Mystic #E6EBF0 */
-    :root {
-      --orient: #004F7C; --orient-deep: #001824; --orient-mid: #002f4f;
-      --orange: #FE5000; --orange-60: #FEA080;
-      --mystic: #E6EBF0; --white: #FFFFFF;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--orient-deep); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; font-family: 'Sora', sans-serif; }
-
-    .vc { width: min(100vw, calc(100vh*16/9)); height: min(100vh, calc(100vw*9/16)); position: relative; overflow: hidden; background: linear-gradient(155deg,#001824 0%,#002f4f 55%,#004F7C 100%); }
-
-    /* Background */
-    .bg-grid { position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px); background-size: 56px 56px; animation: gridBreath 7s ease-in-out infinite; }
-    @keyframes gridBreath { 0%,100%{opacity:.5}50%{opacity:1} }
-    .bg-glow { position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 60% 50% at 50% 50%,rgba(254,80,0,.11) 0%,transparent 70%); }
-    .bg-stripe { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: repeating-linear-gradient(-55deg,transparent,transparent 80px,rgba(254,80,0,.016) 80px,rgba(254,80,0,.016) 81px); }
-    .bg-particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-    .particle { position: absolute; border-radius: 50%; background: rgba(254,80,0,.5); animation: floatUp linear infinite; }
-    @keyframes floatUp { 0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:1}90%{opacity:.4}100%{transform:translateY(-115%) scale(.5);opacity:0} }
-
-    /* Scene */
-    .scene { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4% 6%; opacity: 0; transition: opacity .7s cubic-bezier(.4,0,.2,1); pointer-events: none; }
-    .scene.active { opacity: 1; pointer-events: all; }
-
-    /* HUD */
-    .hud-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: rgba(255,255,255,.08); z-index: 50; }
-    .hud-fill { height: 100%; background: linear-gradient(90deg,var(--orient),var(--orange)); width: 0%; transition: width .12s linear; }
-    .hud-dots { position: absolute; bottom: 13px; left: 50%; transform: translateX(-50%); display: flex; gap: 7px; z-index: 50; }
-    .hud-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.18); transition: background .3s,transform .3s; }
-    .hud-dot.on { background: var(--orange); transform: scale(1.55); }
-    .hud-time { position: absolute; bottom: 21px; right: 22px; font-size: 11px; font-family: 'DM Mono',monospace; color: rgba(255,255,255,.22); z-index: 50; }
-
-    /* Shared animations */
-    @keyframes fadeUp   { from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)} }
-    @keyframes fadeIn   { from{opacity:0}to{opacity:1} }
-    @keyframes growLine { from{width:0;opacity:0}to{width:80px;opacity:1} }
-    @keyframes spin2p   { 0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6} }
-    @keyframes shimmer  { 0%{background-position:-200% center}100%{background-position:200% center} }
-    @keyframes pillPulse{ 0%,100%{transform:scale(1)}50%{transform:scale(1.12)} }
-
-    /* ══ S1: INTRO ══ */
-    .s1-badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(254,80,0,.45); background: rgba(254,80,0,.09); border-radius: 100px; padding: 6px 20px; font-size: clamp(9px,1.1vw,13px); color: rgba(255,255,255,.65); letter-spacing: .18em; text-transform: uppercase; font-weight: 500; margin-bottom: 1.4em; animation: fadeUp .8s .4s both; }
-    .s1-live { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: spin2p 2s infinite; }
-    .s1-wordmark { font-size: clamp(12px,1.8vw,20px); font-weight: 700; color: rgba(255,255,255,.25); letter-spacing: .32em; text-transform: uppercase; margin-bottom: .5em; animation: fadeUp .8s .65s both; }
-    .s1-title { font-size: clamp(50px,9.8vw,126px); font-weight: 900; color: var(--white); letter-spacing: -.03em; line-height: .95; text-align: center; animation: fadeUp .95s .85s both; }
-    .s1-title .acc { background: linear-gradient(90deg,#FE5000,#FEA080,#FE5000); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 3s 2s linear infinite; }
-    .s1-divider { width: 80px; height: 3px; border-radius: 2px; background: linear-gradient(90deg,var(--orient),var(--orange)); margin: 1.2em auto; animation: growLine .9s 1.6s both; }
-    .s1-sub { font-size: clamp(11px,1.5vw,17px); font-weight: 300; color: rgba(255,255,255,.35); animation: fadeIn 1s 2s both; }
-
-    /* ══ S2: PAIN POINTS ══ */
-    .s2-chip { font-size: clamp(9px,1.1vw,12px); font-weight: 600; color: #f87171; letter-spacing: .2em; text-transform: uppercase; margin-bottom: .7em; animation: fadeIn .6s .2s both; }
-    .s2-title { font-size: clamp(26px,4.8vw,62px); font-weight: 800; color: var(--white); line-height: 1.1; text-align: center; margin-bottom: .2em; animation: fadeUp .7s .4s both; }
-    .s2-sub { font-size: clamp(10px,1.3vw,15px); color: rgba(255,255,255,.32); margin-bottom: 1.8em; font-weight: 300; text-align: center; animation: fadeIn .7s .6s both; }
-    .s2-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(10px,1.8vw,18px); width: 100%; max-width: 880px; animation: fadeUp .7s .8s both; }
-    .s2-card { background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.22); border-radius: 14px; padding: clamp(14px,2.2vw,26px); }
-    .s2-num { font-size: clamp(34px,5.2vw,62px); font-weight: 900; color: #f87171; font-family: 'DM Mono',monospace; display: block; margin-bottom: 4px; }
-    .s2-card-title { font-size: clamp(10px,1.2vw,13px); font-weight: 700; color: rgba(255,255,255,.75); margin-bottom: 6px; }
-    .s2-card-desc { font-size: clamp(9px,1.05vw,11px); color: rgba(255,255,255,.35); line-height: 1.6; }
-
-    /* ══ S3: SOLUTION ══ */
-    .s3-eyebrow { font-size: clamp(9px,1.1vw,13px); color: rgba(255,255,255,.28); letter-spacing: .3em; text-transform: uppercase; font-weight: 500; margin-bottom: .9em; animation: fadeUp .7s .2s both; }
-    .s3-h { font-size: clamp(32px,6vw,78px); font-weight: 900; color: var(--white); letter-spacing: -.03em; line-height: 1.02; animation: fadeUp .9s .4s both; }
-    .s3-acc { font-size: clamp(32px,6vw,78px); font-weight: 900; letter-spacing: -.03em; line-height: 1.02; display: block; background: linear-gradient(90deg,#FE5000,#FEA080,#FE5000); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: fadeUp .9s .7s both, shimmer 3s 2s linear infinite; }
-    .s3-body { font-size: clamp(10px,1.3vw,15px); color: rgba(255,255,255,.35); margin-top: 1em; line-height: 1.7; font-weight: 300; animation: fadeIn .8s 1.2s both; }
-    .s3-pill { display: inline-flex; align-items: center; gap: 9px; margin-top: .9em; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.18); border-radius: 100px; padding: 7px 20px; font-size: clamp(10px,1.2vw,13px); color: rgba(255,255,255,.7); font-weight: 500; animation: fadeUp .8s 1.5s both; }
-    .s3-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: spin2p 2s infinite; }
-    /* Feature cards */
-    .s3-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(8px,1.4vw,14px); width: 100%; max-width: 900px; margin-top: 1.4em; opacity: 0; transition: opacity .5s; }
-    .s3-cards.show { opacity: 1; }
-    .feat-card { background: rgba(255,255,255,.055); border: 1px solid rgba(0,79,124,.5); border-left: 3px solid var(--orange); border-radius: 10px; padding: clamp(10px,1.4vw,16px) clamp(10px,1.4vw,16px); opacity: 0; transform: translateY(16px); transition: opacity .5s, transform .5s; }
-    .s3-cards.show .feat-card:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.0s}
-    .s3-cards.show .feat-card:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.12s}
-    .s3-cards.show .feat-card:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.24s}
-    .s3-cards.show .feat-card:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.36s}
-    .s3-cards.show .feat-card:nth-child(5){opacity:1;transform:translateY(0);transition-delay:.48s}
-    .s3-cards.show .feat-card:nth-child(6){opacity:1;transform:translateY(0);transition-delay:.60s}
-    .feat-icon { font-size: clamp(14px,1.8vw,20px); margin-bottom: 5px; display: block; }
-    .feat-title { font-size: clamp(10px,1.2vw,13px); font-weight: 700; color: var(--white); margin-bottom: 3px; }
-    .feat-sub { font-size: clamp(8px,1vw,11px); color: rgba(255,255,255,.38); line-height: 1.5; }
-
-    /* ══ S4: PRODUCT DEMO ══ */
-    .s4-head { font-size: clamp(20px,3.4vw,42px); font-weight: 800; color: var(--white); text-align: center; margin-bottom: .2em; animation: fadeUp .6s .2s both; }
-    .s4-sub { font-size: clamp(10px,1.2vw,14px); color: rgba(255,255,255,.32); text-align: center; margin-bottom: 1em; animation: fadeUp .6s .4s both; }
-    .browser { width: 100%; max-width: 960px; border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.07); animation: fadeUp .7s .6s both; }
-    .b-chrome { background: #1c2b38; padding: 8px 14px; display: flex; align-items: center; gap: 6px; }
-    .bdot { width: 11px; height: 11px; border-radius: 50%; }
+    :root{--orient:#004F7C;--deep:#001824;--mid:#002f4f;--orange:#FE5000;--orange2:#FEA080;--mystic:#E6EBF0;--white:#FFFFFF}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--deep);display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden;font-family:'Sora',sans-serif}
+    .vc{width:min(100vw,calc(100vh*16/9));height:min(100vh,calc(100vw*9/16));position:relative;overflow:hidden;background:linear-gradient(155deg,#001824 0%,#002f4f 55%,#004F7C 100%)}
+    .bg-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:56px 56px;animation:gridBreath 7s ease-in-out infinite}
+    @keyframes gridBreath{0%,100%{opacity:.4}50%{opacity:.9}}
+    .bg-glow{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(254,80,0,.1) 0%,transparent 70%)}
+    .bg-stripe{position:absolute;inset:0;z-index:0;background:repeating-linear-gradient(-55deg,transparent,transparent 80px,rgba(254,80,0,.015) 80px,rgba(254,80,0,.015) 81px)}
+    .bg-particles{position:absolute;inset:0;z-index:0;pointer-events:none}
+    .particle{position:absolute;border-radius:50%;background:rgba(254,80,0,.5);animation:floatUp linear infinite}
+    @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:1}90%{opacity:.4}100%{transform:translateY(-115%) scale(.5);opacity:0}}
+    .g-logo{position:absolute;top:16px;left:20px;z-index:30;opacity:.9}
+    .g-logo img{height:20px;width:auto}
+    .scene{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:5% 6%;opacity:0;transition:opacity .7s cubic-bezier(.4,0,.2,1);pointer-events:none}
+    .scene.active{opacity:1;pointer-events:all}
+    .hud-bar{position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(255,255,255,.07);z-index:50}
+    .hud-fill{height:100%;background:linear-gradient(90deg,var(--orient),var(--orange));width:0%;transition:width .12s linear}
+    .hud-dots{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:50}
+    .hud-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);transition:background .3s,transform .3s}
+    .hud-dot.on{background:var(--orange);transform:scale(1.55)}
+    .hud-time{position:absolute;bottom:21px;right:22px;font-size:11px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.22);z-index:50}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes growLine{from{width:0;opacity:0}to{width:80px;opacity:1}}
+    @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+    @keyframes pulse2{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
+    @keyframes pillPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+    .s1-kicker{font-size:clamp(9px,1.1vw,13px);font-weight:600;color:var(--orange);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.8em;animation:fadeIn .7s .3s both}
+    .s1-headline{font-size:clamp(46px,8.8vw,112px);font-weight:900;color:var(--white);letter-spacing:-.04em;line-height:.92;text-align:center;animation:fadeUp .9s .5s both}
+    .s1-headline .acc{background:linear-gradient(90deg,#FE5000,#FEA080,#FE5000);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s 2s linear infinite}
+    .s1-tagline{font-size:clamp(13px,1.9vw,22px);font-weight:300;color:rgba(255,255,255,.45);margin-top:.9em;text-align:center;max-width:700px;line-height:1.5;animation:fadeUp .8s 1s both}
+    .s1-tagline em{color:rgba(255,255,255,.8);font-style:normal;font-weight:500}
+    .s1-divider{width:80px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--orient),var(--orange));margin:1.4em auto;animation:growLine .9s 1.5s both}
+    .s1-sub{font-size:clamp(10px,1.2vw,14px);color:rgba(255,255,255,.28);letter-spacing:.08em;animation:fadeIn .8s 1.8s both}
+    .s1-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(254,80,0,.4);background:rgba(254,80,0,.08);border-radius:100px;padding:5px 18px;font-size:clamp(9px,1vw,12px);color:rgba(255,255,255,.6);letter-spacing:.15em;text-transform:uppercase;margin-top:1.2em;animation:fadeUp .7s 2.1s both}
+    .s1-live{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:pulse2 2s infinite}
+    .s2-eyebrow{font-size:clamp(9px,1.1vw,12px);font-weight:700;color:#f87171;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.8em;animation:fadeIn .6s .2s both}
+    .s2-statement{font-size:clamp(22px,4vw,50px);font-weight:800;color:var(--white);line-height:1.15;text-align:center;margin-bottom:.4em;animation:fadeUp .7s .4s both}
+    .s2-statement .ital{font-style:italic;color:rgba(255,255,255,.55);font-weight:400}
+    .s2-desc{font-size:clamp(11px,1.4vw,16px);color:rgba(255,255,255,.32);max-width:640px;line-height:1.7;text-align:center;margin-bottom:2em;animation:fadeIn .7s .6s both}
+    .s2-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,22px);width:100%;max-width:820px;animation:fadeUp .7s .8s both}
+    .s2-card{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:16px;padding:clamp(18px,2.5vw,30px)}
+    .s2-card-icon{font-size:clamp(26px,3.5vw,40px);margin-bottom:.4em;display:block}
+    .s2-card-title{font-size:clamp(14px,2vw,22px);font-weight:800;color:var(--white);margin-bottom:.4em}
+    .s2-card-body{font-size:clamp(10px,1.2vw,13px);color:rgba(255,255,255,.38);line-height:1.65}
+    .s2-card-tag{display:inline-block;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#f87171;font-size:clamp(9px,1vw,11px);font-weight:600;padding:3px 10px;border-radius:100px;margin-top:.7em;letter-spacing:.05em}
+    .s3-eyebrow{font-size:clamp(9px,1.1vw,12px);font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.25em;text-transform:uppercase;margin-bottom:.7em;animation:fadeIn .7s .2s both}
+    .s3-headline{font-size:clamp(18px,3.2vw,40px);font-weight:800;color:var(--white);text-align:center;margin-bottom:.25em;animation:fadeUp .8s .4s both}
+    .s3-headline .acc{color:var(--orange)}
+    .s3-sub{font-size:clamp(11px,1.4vw,16px);color:rgba(255,255,255,.35);text-align:center;max-width:620px;margin-bottom:1.8em;line-height:1.6;animation:fadeIn .7s .7s both}
+    .s3-pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1.4vw,14px);width:100%;max-width:920px;animation:fadeUp .7s .9s both}
+    .pillar{background:rgba(255,255,255,.05);border:1px solid rgba(0,79,124,.5);border-top:3px solid var(--orange);border-radius:12px;padding:clamp(14px,2vw,22px)}
+    .pillar-num{font-size:clamp(20px,2.8vw,32px);font-weight:900;color:var(--orange);font-family:'DM Mono',monospace;opacity:.6;margin-bottom:.3em;display:block}
+    .pillar-title{font-size:clamp(11px,1.3vw,15px);font-weight:700;color:var(--white);margin-bottom:.5em;line-height:1.3}
+    .pillar-body{font-size:clamp(9px,1.1vw,12px);color:rgba(255,255,255,.38);line-height:1.6}
+    .s3-result{margin-top:1.5em;background:rgba(0,79,124,.2);border:1px solid rgba(0,79,124,.5);border-radius:100px;padding:9px 26px;font-size:clamp(11px,1.4vw,16px);color:rgba(255,255,255,.8);font-weight:600;text-align:center;animation:fadeUp .7s 1.3s both}
+    .s3-result .green{color:#4ade80}
+    .s4-headline{font-size:clamp(18px,3vw,38px);font-weight:800;color:var(--white);text-align:center;margin-bottom:.3em;animation:fadeUp .6s .2s both}
+    .s4-sub{font-size:clamp(10px,1.2vw,14px);color:rgba(255,255,255,.32);text-align:center;margin-bottom:1.8em;animation:fadeIn .6s .4s both}
+    .tl-wrap{width:100%;max-width:900px}
+    .tl-svg{width:100%;height:auto}
+    .s5-head{font-size:clamp(18px,3vw,38px);font-weight:800;color:var(--white);text-align:center;margin-bottom:.2em;animation:fadeUp .6s .2s both}
+    .s5-sub{font-size:clamp(10px,1.2vw,13px);color:rgba(255,255,255,.3);text-align:center;margin-bottom:.9em;animation:fadeUp .6s .4s both}
+    .s5-layout{display:flex;gap:11px;width:100%;max-width:960px;align-items:flex-start;animation:fadeUp .7s .5s both}
+    .s5-browser{flex:1;min-width:0;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .b-chrome{background:#1c2b38;padding:7px 13px;display:flex;align-items:center;gap:6px}
+    .bdot{width:10px;height:10px;border-radius:50%}
     .bdot.r{background:#ff5f57}.bdot.y{background:#febc2e}.bdot.g{background:#28c840}
-    .b-url { flex: 1; background: rgba(255,255,255,.07); border-radius: 6px; padding: 4px 12px; font-size: 10px; color: rgba(255,255,255,.35); font-family: 'DM Mono',monospace; margin-left: 10px; }
-    .app { background: var(--mystic); }
-    .app-nav { background: var(--orient); padding: 0 18px; display: flex; align-items: stretch; height: 46px; }
-    .nav-logo-img { display: flex; align-items: center; padding-right: 20px; }
-    .nav-logo-img img { height: 22px; width: auto; object-fit: contain; }
-    .nav-logo-fallback { font-size: 13px; font-weight: 800; color: var(--white); letter-spacing: -.01em; display: flex; align-items: center; }
-    .nav-logo-fallback .oc { color: var(--orange); }
-    .nav-tabs { display: flex; align-items: center; gap: 3px; }
-    .ntab { display: flex; align-items: center; gap: 5px; padding: 5px 13px; border-radius: 7px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,.5); height: 34px; cursor: default; }
-    .ntab.on { background: var(--white); color: var(--orient); }
-    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-    .nav-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--white); }
-    .nav-name { font-size: 10px; color: rgba(255,255,255,.5); }
-    .ph { padding: 10px 18px 8px; background: var(--mystic); border-bottom: 1px solid #D1D9E0; }
-    .ph-t { font-size: 15px; font-weight: 700; color: #1A2B3C; }
-    .ph-s { font-size: 10px; color: #8B9AAB; }
-    .app-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; padding: 10px 18px; background: var(--mystic); }
-    .sbox { background: var(--white); border: 1px solid #D1D9E0; border-radius: 9px; padding: 8px 12px; }
-    .sbox-n { font-size: 20px; font-weight: 700; color: #1A2B3C; font-family: 'DM Mono',monospace; }
-    .sbox-l { font-size: 9px; color: #8B9AAB; text-transform: uppercase; letter-spacing: .08em; margin-top: 1px; }
-    .sbox-t { font-size: 8px; color: #22c55e; margin-top: 2px; }
-    .tb { display: flex; gap: 7px; padding: 7px 18px; background: var(--mystic); align-items: center; }
-    .btn-p { background: var(--orient); color: var(--white); border: none; border-radius: 7px; padding: 5px 12px; font-size: 10px; font-weight: 600; cursor: default; font-family: 'Sora',sans-serif; }
-    .btn-s { background: var(--white); color: #4A5568; border: 1px solid #D1D9E0; border-radius: 7px; padding: 5px 12px; font-size: 10px; cursor: default; font-family: 'Sora',sans-serif; }
-    .srch { margin-left: auto; background: var(--white); border: 1px solid #D1D9E0; border-radius: 7px; padding: 5px 12px; font-size: 10px; color: #B0BAC9; width: 180px; }
-    .tbl { background: var(--white); border: 1px solid #D1D9E0; border-radius: 9px; overflow: hidden; margin: 0 18px 12px; }
-    .tr { display: grid; grid-template-columns: 2fr .65fr .65fr .65fr 1.6fr .9fr; align-items: center; padding: 7px 12px; font-size: 9px; color: #4A5568; border-bottom: 1px solid #F0F4F8; gap: 6px; transition: background .4s, opacity .4s; }
-    .tr.th { background: #F8FAFC; font-size: 8px; color: #8B9AAB; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
-    .tr-ref { font-family: 'DM Mono',monospace; font-size: 8px; color: #1A2B3C; }
-    .tr-lot { color: #B0BAC9; font-size: 7.5px; }
-    .apill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 100px; font-size: 8px; font-weight: 600; transition: all .6s; }
-    .apill.ns   { background: #F0F4F8; color: #8B9AAB; }
-    .apill.run  { background: #FFF3E0; color: #E65100; border: 1px solid #FFCC80; }
-    .apill.ok   { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
-    .apill.hold { background: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; }
-    .apill.exc  { background: #FFEBEE; color: #B71C1C; border: 1px solid #FFCDD2; }
-    .apill.pending { background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9; }
-
-    /* ══ S5: EXCEPTION FLOW ══ */
-    .s5-head { font-size: clamp(18px,3vw,38px); font-weight: 800; color: var(--white); text-align: center; margin-bottom: .2em; animation: fadeUp .6s .2s both; }
-    .s5-sub { font-size: clamp(10px,1.2vw,13px); color: rgba(255,255,255,.32); text-align: center; margin-bottom: 1em; animation: fadeUp .6s .4s both; }
-    .s5-layout { display: flex; gap: 12px; width: 100%; max-width: 960px; align-items: flex-start; animation: fadeUp .7s .5s both; }
-
-    /* S5 mini browser (left) */
-    .s5-browser { flex: 1; min-width: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
-    .s5-app { background: var(--mystic); }
-    /* Spotlight rows */
-    .tr.spotlight { background: rgba(245,127,23,.09) !important; border-left: 3px solid var(--orange); }
-    .tr.spotlight .apill.hold { animation: pillPulse 1.4s infinite; }
-    .tr.dimmed { opacity: .3; }
-
-    /* S5 trace log panel (right, slides in) */
-    .s5-trace { width: 360px; flex-shrink: 0; background: var(--white); border-radius: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.55); transform: translateX(calc(100% + 20px)); opacity: 0; transition: transform .55s cubic-bezier(.4,0,.2,1), opacity .4s; overflow: hidden; }
-    .s5-trace.slide-in { transform: translateX(0); opacity: 1; }
-
-    /* Trace panel internals */
-    .tp-hdr { padding: 12px 16px 10px; border-bottom: 1px solid #E8EDF2; }
-    .tp-toprow { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
-    .tp-badge { font-size: 8px; font-weight: 700; color: #8B9AAB; letter-spacing: .15em; text-transform: uppercase; }
-    .tp-x { width: 18px; height: 18px; border-radius: 50%; background: #F0F4F8; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #8B9AAB; }
-    .tp-ref { font-size: 9px; color: #8B9AAB; font-family: 'DM Mono',monospace; margin-bottom: 2px; }
-    .tp-lot { font-size: 15px; font-weight: 700; color: var(--orient); margin-bottom: 5px; }
-    .tp-status { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
-    .pill-hold { display: inline-flex; align-items: center; gap: 4px; background: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; border-radius: 100px; padding: 2px 9px; font-size: 9px; font-weight: 600; }
-    .tp-cargo { font-size: 9px; color: #8B9AAB; }
-    .tp-meta { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; }
-    .tp-mi-l { font-size: 7.5px; color: #B0BAC9; text-transform: uppercase; letter-spacing: .1em; }
-    .tp-mi-v { font-size: 9px; font-weight: 600; color: #1A2B3C; margin-top: 1px; }
-    .tp-body { padding: 10px 16px; }
-    .tp-sec { font-size: 10px; font-weight: 700; color: #1A2B3C; margin-bottom: 7px; padding-bottom: 5px; border-bottom: 2px solid var(--orient); display: inline-block; }
-    .pstep { display: flex; align-items: flex-start; gap: 8px; background: #FFF8E1; border: 1px solid #FFE082; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; }
-    .pstep-icon { width: 20px; height: 20px; border-radius: 50%; background: #FFE082; color: #F57F17; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; margin-top: 1px; }
-    .pstep-body { flex: 1; }
-    .pstep-title { font-size: 10px; font-weight: 700; color: #1A2B3C; margin-bottom: 2px; }
-    .pstep-desc { font-size: 9px; color: #4A5568; line-height: 1.5; }
-    .pstep-hl { color: #F57F17; font-weight: 600; }
-    .pstep-expand { font-size: 8px; color: var(--orient); margin-top: 3px; }
-    .pstep-ms { font-size: 8px; color: #B0BAC9; font-family: 'DM Mono',monospace; flex-shrink: 0; }
-
-    /* AI Agent */
-    .ai-box { border: 1px solid #D1D9E0; border-radius: 10px; overflow: hidden; opacity: 0; transition: opacity .7s; position: relative; margin-top: 6px; }
-    .ai-box.show { opacity: 1; }
-    .ai-hdr { background: #F0F4F8; padding: 7px 12px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid #E0E7EF; }
-    .ai-icon { width: 18px; height: 18px; border-radius: 50%; background: var(--orient); display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--white); }
-    .ai-name { font-size: 10px; font-weight: 700; color: #1A2B3C; }
-    .ai-st { font-size: 8.5px; color: #8B9AAB; margin-left: 3px; }
-    .ai-body { padding: 9px 12px; font-size: 9.5px; color: #4A5568; line-height: 1.65; background: var(--white); }
-    .ai-hl-b { color: var(--orient); font-weight: 700; }
-    .ai-hl-r { color: #B71C1C; font-weight: 700; }
-    .ai-acts { padding: 7px 12px; background: #F8FAFC; border-top: 1px solid #E0E7EF; display: flex; gap: 6px; align-items: center; }
-    .ai-pri { background: var(--orient); color: var(--white); border: none; border-radius: 7px; padding: 6px 12px; font-size: 9.5px; font-weight: 600; cursor: default; display: flex; align-items: center; gap: 5px; font-family: 'Sora',sans-serif; transition: all .3s; }
-    .ai-pri.glow { background: var(--orange); box-shadow: 0 0 0 3px rgba(254,80,0,.28),0 4px 16px rgba(254,80,0,.4); transform: scale(1.04); }
-    .ai-pri.clicking { transform: scale(.94); }
-    .ai-sec { background: transparent; color: #8B9AAB; border: 1px solid #D1D9E0; border-radius: 7px; padding: 6px 10px; font-size: 9.5px; cursor: default; font-family: 'Sora',sans-serif; }
-    .email-ok { position: absolute; inset: 0; background: var(--orient); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity .6s; pointer-events: none; border-radius: 10px; }
-    .email-ok.show { opacity: 1; }
-    .email-check { font-size: 32px; margin-bottom: 6px; }
-    .email-msg { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
-    .email-sub { font-size: 10px; color: rgba(255,255,255,.55); }
-
-    /* Toast */
-    .toast { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--orient); color: var(--white); border-radius: 10px; padding: 9px 18px; font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 10px; opacity: 0; transition: transform .45s cubic-bezier(.4,0,.2,1), opacity .45s; z-index: 100; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .toast-icon { color: #4ade80; font-size: 13px; }
-    .toast-sub { color: rgba(255,255,255,.5); font-size: 9px; margin-top: 1px; }
-    .toast-left { display: flex; flex-direction: column; }
-
-    /* ══ S6: BRAND CLOSE ══ */
-    .s6-wrap { text-align: center; }
-    .s6-by { font-size: clamp(10px,1.3vw,14px); color: rgba(255,255,255,.18); letter-spacing: .38em; text-transform: uppercase; font-weight: 600; margin-bottom: .6em; animation: fadeIn .8s .3s both; }
-    .s6-brand { font-size: clamp(48px,9.2vw,118px); font-weight: 900; letter-spacing: -.03em; line-height: .95; color: var(--white); margin-bottom: .08em; animation: fadeUp .9s .6s both; }
-    .s6-brand span { background: linear-gradient(90deg,#FE5000,#FEA080,#FE5000); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 3s 1.5s linear infinite; }
-    .s6-divider { width: 80px; height: 3px; background: linear-gradient(90deg,var(--orient),var(--orange)); border-radius: 2px; margin: 1.2em auto; animation: growLine .9s 1.4s both; }
-    .s6-tagline { font-size: clamp(12px,1.7vw,20px); color: rgba(255,255,255,.36); font-weight: 300; margin-bottom: 2em; animation: fadeIn .8s 1.8s both; }
-    .s6-carriers { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-bottom: 2.2em; animation: fadeUp .8s 2.1s both; }
-    .s6-ctag { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.11); border-radius: 100px; padding: 6px 18px; font-size: clamp(9px,1.1vw,12px); color: rgba(255,255,255,.38); font-weight: 500; }
-    .s6-url { font-size: clamp(10px,1.3vw,14px); color: rgba(255,255,255,.18); font-family: 'DM Mono',monospace; letter-spacing: .07em; animation: fadeIn .8s 2.4s both; }
+    .b-url{flex:1;background:rgba(255,255,255,.07);border-radius:5px;padding:3px 10px;font-size:9px;color:rgba(255,255,255,.32);font-family:'DM Mono',monospace;margin-left:9px}
+    .app-nav{background:var(--orient);padding:0 16px;display:flex;align-items:stretch;height:42px}
+    .nav-logo{display:flex;align-items:center;padding-right:18px}
+    .nav-logo img{height:17px;width:auto}
+    .nav-tabs{display:flex;align-items:center;gap:3px}
+    .ntab{display:flex;align-items:center;gap:4px;padding:4px 11px;border-radius:6px;font-size:10px;font-weight:500;color:rgba(255,255,255,.5);height:30px;cursor:default}
+    .ntab.on{background:var(--white);color:var(--orient)}
+    .nav-right{margin-left:auto;display:flex;align-items:center;gap:7px}
+    .nav-av{width:24px;height:24px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--white)}
+    .nav-nm{font-size:9px;color:rgba(255,255,255,.5)}
+    .ph{padding:8px 16px 6px;background:var(--mystic);border-bottom:1px solid #D1D9E0}
+    .ph-t{font-size:13px;font-weight:700;color:#1A2B3C}.ph-s{font-size:9px;color:#8B9AAB}
+    .tb{display:flex;gap:6px;padding:6px 16px;background:var(--mystic);align-items:center}
+    .btn-p{background:var(--orient);color:var(--white);border:none;border-radius:6px;padding:5px 11px;font-size:9px;font-weight:600;cursor:default;font-family:'Sora',sans-serif;transition:background .3s}
+    .btn-s{background:var(--white);color:#4A5568;border:1px solid #D1D9E0;border-radius:6px;padding:5px 11px;font-size:9px;cursor:default;font-family:'Sora',sans-serif}
+    .srch{margin-left:auto;background:var(--white);border:1px solid #D1D9E0;border-radius:6px;padding:5px 10px;font-size:9px;color:#B0BAC9;width:160px}
+    .tbl{background:var(--white);border:1px solid #D1D9E0;border-radius:8px;overflow:hidden;margin:0 16px 10px}
+    .tr{display:grid;grid-template-columns:2fr .65fr .65fr .65fr 1.6fr .9fr;align-items:center;padding:6px 11px;font-size:8.5px;color:#4A5568;border-bottom:1px solid #F0F4F8;gap:5px;transition:background .4s,opacity .4s}
+    .tr.th{background:#F8FAFC;font-size:7.5px;color:#8B9AAB;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+    .tr-ref{font-family:'DM Mono',monospace;font-size:7.5px;color:#1A2B3C}
+    .tr-lot{color:#B0BAC9;font-size:7px}
+    .apill{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:100px;font-size:7.5px;font-weight:600;transition:all .6s;white-space:nowrap}
+    .apill.ns{background:#F0F4F8;color:#8B9AAB}
+    .apill.run{background:#FFF3E0;color:#E65100;border:1px solid #FFCC80}
+    .apill.ok{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7}
+    .apill.exc{background:#FFEBEE;color:#B71C1C;border:1px solid #FFCDD2}
+    .tr.spotlight{background:rgba(183,28,28,.07)!important;border-left:3px solid #DC2626}
+    .tr.spotlight .apill.exc{animation:pillPulse 1.4s infinite}
+    .tr.dimmed{opacity:.3}
+    .s5-trace{width:350px;flex-shrink:0;background:var(--white);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.55);transform:translateX(calc(100% + 20px));opacity:0;transition:transform .55s cubic-bezier(.4,0,.2,1),opacity .4s;overflow:hidden}
+    .s5-trace.slide-in{transform:translateX(0);opacity:1}
+    .tp-hdr{padding:11px 15px 9px;border-bottom:1px solid #E8EDF2}
+    .tp-toprow{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+    .tp-badge{font-size:7.5px;font-weight:700;color:#8B9AAB;letter-spacing:.15em;text-transform:uppercase}
+    .tp-x{width:17px;height:17px;border-radius:50%;background:#F0F4F8;display:flex;align-items:center;justify-content:center;font-size:8px;color:#8B9AAB}
+    .tp-ref{font-size:8.5px;color:#8B9AAB;font-family:'DM Mono',monospace;margin-bottom:2px}
+    .tp-lot{font-size:14px;font-weight:700;color:var(--orient);margin-bottom:5px}
+    .tp-status{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+    .pill-exc{display:inline-flex;align-items:center;gap:4px;background:#FFEBEE;color:#B71C1C;border:1px solid #FFCDD2;border-radius:100px;padding:2px 8px;font-size:8.5px;font-weight:600}
+    .tp-cargo{font-size:8.5px;color:#8B9AAB}
+    .tp-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+    .tp-mi-l{font-size:7px;color:#B0BAC9;text-transform:uppercase;letter-spacing:.1em}
+    .tp-mi-v{font-size:8.5px;font-weight:600;color:#1A2B3C;margin-top:1px}
+    .tp-body{padding:9px 15px}
+    .tp-sec{font-size:9.5px;font-weight:700;color:#1A2B3C;margin-bottom:6px;padding-bottom:4px;border-bottom:2px solid var(--orient);display:inline-block}
+    .ps{display:flex;align-items:flex-start;gap:7px;border-radius:7px;padding:6px 8px;margin-bottom:4px}
+    .ps.pass{background:#F1F8E9;border:1px solid #C5E1A5}
+    .ps.fail{background:#FFEBEE;border:1px solid #FFCDD2}
+    .ps.skip{background:#F5F5F5;border:1px solid #E0E0E0;opacity:.6}
+    .ps-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px}
+    .ps.pass .ps-icon{background:#C5E1A5;color:#2E7D32}
+    .ps.fail .ps-icon{background:#FFCDD2;color:#B71C1C}
+    .ps.skip .ps-icon{background:#E0E0E0;color:#9E9E9E}
+    .ps-body{flex:1}
+    .ps-title{font-size:9px;font-weight:700;color:#1A2B3C;margin-bottom:1px}
+    .ps-desc{font-size:8px;color:#4A5568;line-height:1.5}
+    .ps-hl{color:#B71C1C;font-weight:600}
+    .ps-ms{font-size:7.5px;color:#B0BAC9;font-family:'DM Mono',monospace;flex-shrink:0}
+    .ai-box{border:1px solid #D1D9E0;border-radius:9px;overflow:hidden;opacity:0;transition:opacity .7s;position:relative;margin-top:5px}
+    .ai-box.show{opacity:1}
+    .ai-hdr{background:#F0F4F8;padding:6px 11px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #E0E7EF}
+    .ai-icon{width:16px;height:16px;border-radius:50%;background:var(--orient);display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--white)}
+    .ai-name{font-size:9.5px;font-weight:700;color:#1A2B3C}
+    .ai-st{font-size:8px;color:#8B9AAB;margin-left:3px}
+    .ai-body{padding:8px 11px;font-size:9px;color:#4A5568;line-height:1.65;background:var(--white)}
+    .ai-hl-r{color:#B71C1C;font-weight:700}
+    .ai-hl-b{color:var(--orient);font-weight:700}
+    .ai-acts{padding:7px 11px;background:#F8FAFC;border-top:1px solid #E0E7EF;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+    .ai-pri{background:#B71C1C;color:var(--white);border:none;border-radius:6px;padding:5px 11px;font-size:8.5px;font-weight:600;cursor:default;display:flex;align-items:center;gap:4px;font-family:'Sora',sans-serif;transition:all .3s}
+    .ai-pri.glow{box-shadow:0 0 0 3px rgba(183,28,28,.25),0 4px 14px rgba(183,28,28,.35);transform:scale(1.04)}
+    .ai-sec{background:transparent;color:#8B9AAB;border:1px solid #D1D9E0;border-radius:6px;padding:5px 9px;font-size:8.5px;cursor:default;font-family:'Sora',sans-serif}
+    .email-ok{position:absolute;inset:0;background:#B71C1C;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .6s;pointer-events:none;border-radius:9px}
+    .email-ok.show{opacity:1}
+    .email-check{font-size:28px;margin-bottom:5px}
+    .email-msg{font-size:12px;font-weight:700;color:var(--white);margin-bottom:2px}
+    .email-sub{font-size:9px;color:rgba(255,255,255,.55)}
+    .toast{position:absolute;bottom:26px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--orient);color:var(--white);border-radius:9px;padding:8px 16px;font-size:10.5px;font-weight:500;display:flex;align-items:center;gap:9px;opacity:0;transition:transform .45s cubic-bezier(.4,0,.2,1),opacity .45s;z-index:100;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    .toast-icon{color:#4ade80;font-size:12px}
+    .toast-sub{color:rgba(255,255,255,.45);font-size:8.5px;margin-top:1px}
+    .toast-left{display:flex;flex-direction:column}
+    .s6-wrap{text-align:center}
+    .s6-by{font-size:clamp(9px,1.2vw,13px);color:rgba(255,255,255,.18);letter-spacing:.38em;text-transform:uppercase;font-weight:600;margin-bottom:.5em;animation:fadeIn .8s .3s both}
+    .s6-brand{font-size:clamp(44px,8.5vw,108px);font-weight:900;letter-spacing:-.03em;line-height:.95;color:var(--white);margin-bottom:.1em;animation:fadeUp .9s .6s both}
+    .s6-brand span{background:linear-gradient(90deg,#FE5000,#FEA080,#FE5000);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s 1.5s linear infinite}
+    .s6-divider{width:80px;height:3px;background:linear-gradient(90deg,var(--orient),var(--orange));border-radius:2px;margin:1.1em auto;animation:growLine .9s 1.3s both}
+    .s6-slogan{font-size:clamp(14px,2.2vw,26px);font-weight:300;color:rgba(255,255,255,.4);margin-bottom:.3em;animation:fadeIn .8s 1.7s both}
+    .s6-slogan strong{color:rgba(255,255,255,.75);font-weight:600}
+    .s6-tagline{font-size:clamp(11px,1.4vw,16px);color:rgba(255,255,255,.22);margin-bottom:2em;animation:fadeIn .8s 2s both}
+    .s6-carriers{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:1.8em;animation:fadeUp .8s 2.3s both}
+    .s6-ctag{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:5px 16px;font-size:clamp(9px,1.1vw,11px);color:rgba(255,255,255,.35);font-weight:500}
+    .s6-url{font-size:clamp(9px,1.2vw,13px);color:rgba(255,255,255,.16);font-family:'DM Mono',monospace;letter-spacing:.07em;animation:fadeIn .8s 2.6s both}
   </style>
 </head>
 <body>
 <div class="vc" id="vc">
   <div class="bg-grid"></div><div class="bg-glow"></div>
   <div class="bg-stripe"></div><div class="bg-particles" id="particles"></div>
-
-  <!-- ══ S1: INTRO ══ -->
+  <div class="g-logo"><img src="https://raw.githubusercontent.com/moov-logistics/smartallocation/main/assets/MOOV_Logo_%E7%99%BD%E6%A9%99.png" alt="MOOV"></div>
   <div class="scene" id="s1">
-    <div class="s1-badge"><span class="s1-live"></span>BY MOOV LOGISTICS · LIVE SYSTEM</div>
-    <div class="s1-wordmark">MOOV LOGISTICS</div>
-    <div class="s1-title">Smart<span class="acc">Allocation</span></div>
+    <div class="s1-kicker">MOOV Logistics · SmartAllocation</div>
+    <div class="s1-headline"><span class="acc">Allocation</span><br>on Autopilot.</div>
+    <div class="s1-tagline">Turn <em>Supply Chain Complexity</em> into <em>Instant Action.</em></div>
     <div class="s1-divider"></div>
     <div class="s1-sub">Intelligent Carrier Booking Platform</div>
+    <div class="s1-badge"><span class="s1-live"></span>LIVE SYSTEM · AVG 1.8s PER LOT</div>
   </div>
-
-  <!-- ══ S2: PAIN POINTS ══ -->
   <div class="scene" id="s2">
-    <div class="s2-chip">⚠ INDUSTRY CHALLENGE</div>
-    <div class="s2-title">At scale, manual booking<br>isn't slow — it's broken.</div>
-    <div class="s2-sub">Over 1,000 LOTs per month. Every one requires 5 manual decision steps.</div>
-    <div class="s2-cards">
-      <div class="s2-card">
-        <span class="s2-num" id="cn0">0</span>
-        <div class="s2-card-title">Manual checks per month</div>
-        <div class="s2-card-desc">1,000+ LOTs × 5 validation steps each — date buffer, carrier match, quota, vessel schedule, FND rule. Every single one by hand.</div>
-      </div>
-      <div class="s2-card">
-        <span class="s2-num">0</span>
-        <div class="s2-card-title">Real-time risk signals</div>
-        <div class="s2-card-desc">Weather disruptions, port congestion, sudden vessel delays — your team finds out after the ETD window has already closed.</div>
-      </div>
-      <div class="s2-card">
-        <span class="s2-num">∞</span>
-        <div class="s2-card-title">Cascading re-assignments</div>
-        <div class="s2-card-desc">Switching one carrier mid-season invalidates every pre-assigned LOT on that lane. Hundreds of records, all re-done manually.</div>
-      </div>
+    <div class="s2-eyebrow">THE TRADITIONAL BOOKING PROBLEM</div>
+    <div class="s2-statement">Booking isn't a process.<br><span class="ital">It's a puzzle.</span></div>
+    <div class="s2-desc">In traditional supply chains, critical data lives in inboxes, spreadsheets, and phone calls. There is no system — only coordination overhead.</div>
+    <div class="s2-grid">
+      <div class="s2-card"><span class="s2-card-icon">📧</span><div class="s2-card-title">Fragmented Communication</div><div class="s2-card-body">Endless email threads. Carrier confirmations via WhatsApp. Allocation decisions buried in someone's inbox. Every booking requires a chain of manual back-and-forth with no audit trail.</div><div class="s2-card-tag">NO SINGLE SOURCE OF TRUTH</div></div>
+      <div class="s2-card"><span class="s2-card-icon">❌</span><div class="s2-card-title">No Visibility</div><div class="s2-card-body">Carrier allocation status unknown until it's too late. Quota overruns discovered at booking stage. ETD windows missed before the team even reacts. Your supply chain runs blind.</div><div class="s2-card-tag">DATA LOCKED IN A BLACK BOX</div></div>
     </div>
   </div>
-
-  <!-- ══ S3: SOLUTION + FEATURES ══ -->
-  <div class="scene" id="s3" style="justify-content:flex-start;padding-top:5%">
-    <div class="s3-eyebrow">INTRODUCING SMARTALLOCATION</div>
-    <div class="s3-h">The carrier booking</div>
-    <div class="s3-acc">workflow, automated.</div>
-    <div class="s3-body">Pulls live PO data, runs the full 5-step logic, and pre-assigns the optimal<br>carrier, service, and voyage — in 1.8 seconds per LOT.</div>
-    <div class="s3-pill"><span class="s3-dot"></span>Live System &nbsp;·&nbsp; Avg 1.8s per LOT</div>
-    <div class="s3-cards" id="s3-cards">
-      <div class="feat-card"><span class="feat-icon">⚡</span><div class="feat-title">One-Click Batch Assignment</div><div class="feat-sub">Trigger all unstarted LOTs in a single action</div></div>
-      <div class="feat-card"><span class="feat-icon">⏱</span><div class="feat-title">Hours Reduced to Seconds</div><div class="feat-sub">1.8s average per LOT, fully automated</div></div>
-      <div class="feat-card"><span class="feat-icon">🔗</span><div class="feat-title">5-Step Rule Engine</div><div class="feat-sub">Logic fires automatically — zero manual input</div></div>
-      <div class="feat-card"><span class="feat-icon">🚢</span><div class="feat-title">Optimal Voyage Detection</div><div class="feat-sub">ETD window CRD+12d to +20d, priority-ranked</div></div>
-      <div class="feat-card"><span class="feat-icon">📊</span><div class="feat-title">Dynamic Capacity View</div><div class="feat-sub">Live TEU quota per carrier, per sailing week</div></div>
-      <div class="feat-card"><span class="feat-icon">🔄</span><div class="feat-title">Real-Time Allocation Check</div><div class="feat-sub">Confirm remaining quota before every booking</div></div>
+  <div class="scene" id="s3">
+    <div class="s3-eyebrow">WITH SMARTALLOCATION</div>
+    <div class="s3-headline">Booking is a <span class="acc">strictly governed,<br>data-driven process.</span></div>
+    <div class="s3-sub">Our platform enforces rules, automates decisions, and creates a transparent, auditable booking chain — from PO to confirmed vessel.</div>
+    <div class="s3-pillars">
+      <div class="pillar"><span class="pillar-num">01</span><div class="pillar-title">Intercept Requests</div><div class="pillar-body">Invalid bookings caught before entering the system. Rules enforced automatically, every time.</div></div>
+      <div class="pillar"><span class="pillar-num">02</span><div class="pillar-title">Carrier Allocation</div><div class="pillar-body">Auto-assigns optimal carrier based on client strategy, quota availability, and voyage fit.</div></div>
+      <div class="pillar"><span class="pillar-num">03</span><div class="pillar-title">Instructing OHA</div><div class="pillar-body">Standardized instructions issued to execution agents — no ambiguity, no manual drafting.</div></div>
+      <div class="pillar"><span class="pillar-num">04</span><div class="pillar-title">Escalation Handling</div><div class="pillar-body">Overbooking and exceptions trigger immediate intervention with full context and clear ownership.</div></div>
     </div>
+    <div class="s3-result"><span class="green">●</span> Always on-plan. 100% visible. Zero black boxes.</div>
   </div>
-
-  <!-- ══ S4: PRODUCT DEMO ══ -->
   <div class="scene" id="s4">
-    <div class="s4-head">AI Pre-Assignment Board</div>
-    <div class="s4-sub">Live processing &nbsp;·&nbsp; Batch execution &nbsp;·&nbsp; Full traceability</div>
-    <div class="browser">
-      <div class="b-chrome">
-        <div class="bdot r"></div><div class="bdot y"></div><div class="bdot g"></div>
-        <div class="b-url">moov-logistics.github.io/smartallocation</div>
-      </div>
-      <div class="app">
-        <div class="app-nav">
-          <div class="nav-logo-img">
-            <img src="https://raw.githubusercontent.com/moov-logistics/smartallocation/main/assets/MOOV_Logo_%E7%99%BD%E6%A9%99.png"
-                 alt="MOOV"
-                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-            <div class="nav-logo-fallback" style="display:none">
-              <svg height="22" viewBox="0 0 86 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 15L9 5L16 15L13.5 15L9 8.5L4.5 15Z" fill="#FE5000"/>
-                <text x="20" y="16" font-family="Sora,sans-serif" font-weight="800" font-size="13.5" fill="white" letter-spacing="-0.4">MOOV</text>
-              </svg>
-            </div>
-          </div>
-          <div class="nav-tabs">
-            <div class="ntab on">⚓ Pre-Assign</div>
-            <div class="ntab">📦 Carrier Booking</div>
-            <div class="ntab">📊 Allocation Mgmt</div>
-          </div>
-          <div class="nav-right">
-            <div class="nav-name">z.dorothy</div>
-            <div class="nav-avatar">Z</div>
-          </div>
-        </div>
-        <div class="ph"><div class="ph-t">Pre-Assign</div><div class="ph-s">PO Import &amp; Auto Pre-Assignment · Last synced 2 min ago</div></div>
-        <div class="app-stats">
-          <div class="sbox"><div class="sbox-n">127</div><div class="sbox-l">Total POs</div><div class="sbox-t">↑ All imported</div></div>
-          <div class="sbox"><div class="sbox-n" id="sn-ok" style="color:#2E7D32">0</div><div class="sbox-l">AI Auto Assigned</div><div class="sbox-t" style="color:#2E7D32">Avg 1.8s per PO</div></div>
-          <div class="sbox"><div class="sbox-n" style="color:#F57F17">8</div><div class="sbox-l">On Hold</div><div class="sbox-t" style="color:#F57F17">Supplier action needed</div></div>
-          <div class="sbox"><div class="sbox-n" style="color:#B71C1C">3</div><div class="sbox-l">Exception</div><div class="sbox-t" style="color:#B71C1C">Need human review</div></div>
-        </div>
-        <div class="tb"><button class="btn-p">⟳ Sync from BI</button><button class="btn-s">▶ Run All Not-Started</button><div class="srch">Search PO, Lot, IAN, POL, POD…</div></div>
-        <div class="tbl">
-          <div class="tr th"><div>MOOV's Ref / LOT</div><div>POL</div><div>POD</div><div>TEU</div><div>Carrier / Vessel / Voyage</div><div>Status</div></div>
-          <div class="tr"><div><div class="tr-ref">PO-2026-0842</div><div class="tr-lot">LOT-CN001 · IAN 58291 · Supplier A</div></div><div>CNSWA</div><div>DEHAM</div><div>2×40HC</div><div id="v0" style="font-size:8.5px;color:#B0BAC9">—</div><div><span class="apill ns" id="p0">Not Started</span></div></div>
-          <div class="tr"><div><div class="tr-ref">PO-2026-0843</div><div class="tr-lot">LOT-CN002 · IAN 58301 · Supplier B</div></div><div>CNSHA</div><div>GBFXT</div><div>1×20DC</div><div id="v1" style="font-size:8.5px;color:#B0BAC9">—</div><div><span class="apill ns" id="p1">Not Started</span></div></div>
-          <div class="tr"><div><div class="tr-ref">PO-2026-0844</div><div class="tr-lot">LOT-BD001 · IAN 58419 · Supplier C</div></div><div>BDDAC</div><div>NLANR</div><div>3×40HC</div><div id="v2" style="font-size:8.5px;color:#B0BAC9">—</div><div><span class="apill ns" id="p2">Not Started</span></div></div>
-          <div class="tr"><div><div class="tr-ref">MB000521687</div><div class="tr-lot">521687-BCN-1 · IAN 58502 · Supplier D</div></div><div>CNTAO</div><div>ESBCN</div><div>4×40HC</div><div id="v3" style="font-size:8.5px;color:#B0BAC9">—</div><div><span class="apill ns" id="p3">Not Started</span></div></div>
-        </div>
-      </div>
+    <div class="s4-headline">End-to-End · Fully Automated</div>
+    <div class="s4-sub">Every milestone triggered automatically — from raw PO data to confirmed carrier booking.</div>
+    <div class="tl-wrap">
+      <svg class="tl-svg" viewBox="0 0 900 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M80,65 H820 Q858,65 858,103 V148 Q858,186 820,186 H80 Q42,186 42,148" stroke="rgba(255,255,255,0.12)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="tl-fill" d="M80,65 H820 Q858,65 858,103 V148 Q858,186 820,186 H80 Q42,186 42,148" stroke="#4ade80" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2500" stroke-dashoffset="2500"/>
+        <text x="80" y="30" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.65)">PO Import</text>
+        <text x="80" y="44" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="rgba(255,255,255,0.3)">Data from BI</text>
+        <text x="340" y="30" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.65)">Pre-Assign</text>
+        <text x="340" y="44" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="rgba(255,255,255,0.3)">5-step rule engine</text>
+        <text x="600" y="30" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.65)">Exception Handling</text>
+        <text x="600" y="44" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="rgba(255,255,255,0.3)">AI Agent intervenes</text>
+        <text x="820" y="30" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.65)">SRD Received</text>
+        <text x="820" y="44" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="rgba(255,255,255,0.3)">Shipment release date</text>
+        <circle id="tn1" cx="80" cy="65" r="26" fill="#002f4f" stroke="rgba(255,255,255,0.18)" stroke-width="2.5"/>
+        <text x="80" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="rgba(255,255,255,0.4)">01</text>
+        <circle id="tn2" cx="340" cy="65" r="26" fill="#002f4f" stroke="rgba(255,255,255,0.18)" stroke-width="2.5"/>
+        <text x="340" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="rgba(255,255,255,0.4)">02</text>
+        <circle id="tn3" cx="600" cy="65" r="26" fill="#002f4f" stroke="rgba(255,255,255,0.18)" stroke-width="2.5"/>
+        <text x="600" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="rgba(255,255,255,0.4)">03</text>
+        <circle id="tn4" cx="820" cy="65" r="26" fill="#002f4f" stroke="rgba(255,255,255,0.18)" stroke-width="2.5"/>
+        <text x="820" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="rgba(255,255,255,0.4)">04</text>
+        <text x="600" y="212" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.65)">Carrier Booking</text>
+        <text x="600" y="226" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="rgba(255,255,255,0.3)">Instruction to carrier</text>
+        <text x="80" y="212" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.65)">Auto-Booking ✓</text>
+        <text x="80" y="226" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="rgba(255,255,255,0.3)">Loop closed</text>
+        <circle id="tn5" cx="600" cy="186" r="26" fill="#002f4f" stroke="rgba(255,255,255,0.18)" stroke-width="2.5"/>
+        <text x="600" y="183" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="rgba(255,255,255,0.4)">05</text>
+        <circle id="tn6" cx="80" cy="186" r="26" fill="#002f4f" stroke="rgba(255,255,255,0.18)" stroke-width="2.5"/>
+        <text x="80" y="183" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="rgba(255,255,255,0.4)">06</text>
+        <text id="tk1" x="80" y="72" text-anchor="middle" font-size="20" fill="#4ade80" opacity="0">✓</text>
+        <text id="tk2" x="340" y="72" text-anchor="middle" font-size="20" fill="#4ade80" opacity="0">✓</text>
+        <text id="tk3" x="600" y="72" text-anchor="middle" font-size="20" fill="#4ade80" opacity="0">✓</text>
+        <text id="tk4" x="820" y="72" text-anchor="middle" font-size="20" fill="#4ade80" opacity="0">✓</text>
+        <text id="tk5" x="600" y="193" text-anchor="middle" font-size="20" fill="#4ade80" opacity="0">✓</text>
+        <text id="tk6" x="80" y="193" text-anchor="middle" font-size="20" fill="#4ade80" opacity="0">✓</text>
+      </svg>
     </div>
   </div>
-
-  <!-- ══ S5: EXCEPTION FLOW ══ -->
   <div class="scene" id="s5">
-    <div class="s5-head">Exception Handling · AI Agent in Action</div>
-    <div class="s5-sub">Auto-pause on detection · Operator prompted to act · Full audit trail retained</div>
+    <div class="s5-head">One Click. Every LOT. Zero Manual Steps.</div>
+    <div class="s5-sub">Run all unstarted LOTs in a single action · Exceptions surfaced instantly with AI-guided resolution</div>
     <div class="s5-layout">
-      <!-- Left: mini browser with spotlight row -->
       <div class="s5-browser">
-        <div class="b-chrome" style="padding:7px 12px">
-          <div class="bdot r"></div><div class="bdot y"></div><div class="bdot g"></div>
-          <div class="b-url" style="font-size:9px">moov-logistics.github.io/smartallocation</div>
-        </div>
-        <div class="s5-app" style="background:var(--mystic)">
-          <div class="app-nav" style="height:40px">
-            <div class="nav-logo-img">
-              <img src="https://raw.githubusercontent.com/moov-logistics/smartallocation/main/assets/MOOV_Logo_%E7%99%BD%E6%A9%99.png"
-                   alt="MOOV" style="height:18px"
-                   onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-              <div class="nav-logo-fallback" style="display:none">
-                <svg height="18" viewBox="0 0 86 22" fill="none"><path d="M2 15L9 5L16 15L13.5 15L9 8.5L4.5 15Z" fill="#FE5000"/><text x="20" y="16" font-family="Sora,sans-serif" font-weight="800" font-size="13.5" fill="white" letter-spacing="-0.4">MOOV</text></svg>
-              </div>
-            </div>
-            <div class="nav-tabs"><div class="ntab on" style="font-size:10px;padding:4px 10px">⚓ Pre-Assign</div></div>
-            <div class="nav-right"><div class="nav-avatar" style="width:22px;height:22px;font-size:9px">Z</div></div>
+        <div class="b-chrome"><div class="bdot r"></div><div class="bdot y"></div><div class="bdot g"></div><div class="b-url">moov-logistics.github.io/smartallocation</div></div>
+        <div style="background:var(--mystic)">
+          <div class="app-nav">
+            <div class="nav-logo"><img src="https://raw.githubusercontent.com/moov-logistics/smartallocation/main/assets/MOOV_Logo_%E7%99%BD%E6%A9%99.png" alt="MOOV" style="height:17px"></div>
+            <div class="nav-tabs"><div class="ntab on">⚓ Pre-Assign</div><div class="ntab">📦 Carrier Booking</div></div>
+            <div class="nav-right"><div class="nav-nm">z.dorothy</div><div class="nav-av">Z</div></div>
           </div>
-          <div style="padding:8px 14px 4px;background:var(--mystic);border-bottom:1px solid #D1D9E0">
-            <div style="font-size:13px;font-weight:700;color:#1A2B3C">Pre-Assign</div>
-            <div style="font-size:9px;color:#8B9AAB">1 exception detected · Operator action required</div>
-          </div>
-          <div class="tbl" style="margin:8px 14px 10px">
-            <div class="tr th" style="grid-template-columns:2fr .7fr .7fr 1.4fr .9fr;font-size:7.5px"><div>MOOV's Ref / LOT</div><div>POL→POD</div><div>TEU</div><div>Carrier / Voyage</div><div>Status</div></div>
-            <div class="tr" id="s5r0" style="grid-template-columns:2fr .7fr .7fr 1.4fr .9fr"><div><div class="tr-ref">PO-2026-0842</div><div class="tr-lot">LOT-CN001</div></div><div style="font-size:8px">CNSWA→DEHAM</div><div>2×40HC</div><div style="font-size:8px;color:#4A5568">CMA CGM · PALOMA</div><div><span class="apill ok">✓ Pre-Assigned</span></div></div>
-            <div class="tr" id="s5r1" style="grid-template-columns:2fr .7fr .7fr 1.4fr .9fr"><div><div class="tr-ref">PO-2026-0843</div><div class="tr-lot">LOT-CN002</div></div><div style="font-size:8px">CNSHA→GBFXT</div><div>1×20DC</div><div style="font-size:8px;color:#4A5568">Hapag-Lloyd · VENICE</div><div><span class="apill ok">✓ Pre-Assigned</span></div></div>
-            <div class="tr" id="s5r2" style="grid-template-columns:2fr .7fr .7fr 1.4fr .9fr"><div><div class="tr-ref">PO-2026-0844</div><div class="tr-lot">LOT-BD001</div></div><div style="font-size:8px">BDDAC→NLANR</div><div>3×40HC</div><div style="font-size:8px;color:#4A5568">MSC · ALANYA</div><div><span class="apill ok">✓ Pre-Assigned</span></div></div>
-            <div class="tr" id="s5r3" style="grid-template-columns:2fr .7fr .7fr 1.4fr .9fr"><div><div class="tr-ref">MB000521687</div><div class="tr-lot">521687-BCN-1</div></div><div style="font-size:8px">CNTAO→ESBCN</div><div>4×40HC</div><div style="font-size:8px;color:#B0BAC9">—</div><div><span class="apill hold" id="s5p3">⏸ On Hold</span></div></div>
+          <div class="ph"><div class="ph-t">Pre-Assign</div><div class="ph-s">1,000+ LOTs/month · Last synced 1 min ago</div></div>
+          <div class="tb"><button class="btn-p" id="run-btn">▶ Run All Not-Started</button><button class="btn-s">⟳ Sync from BI</button><div class="srch">Search PO, Lot, IAN, POL, POD…</div></div>
+          <div class="tbl">
+            <div class="tr th"><div>MOOV's Ref / LOT</div><div>POL</div><div>POD</div><div>TEU</div><div>Carrier / Vessel</div><div>Status</div></div>
+            <div class="tr" id="s5r0"><div><div class="tr-ref">PO-2026-0842</div><div class="tr-lot">LOT-CN001 · Supplier A</div></div><div>CNSWA</div><div>DEHAM</div><div>2×40HC</div><div id="v0" style="font-size:8px;color:#B0BAC9">—</div><div><span class="apill ns" id="p0">Not Started</span></div></div>
+            <div class="tr" id="s5r1"><div><div class="tr-ref">PO-2026-0843</div><div class="tr-lot">LOT-CN002 · Supplier B</div></div><div>CNSHA</div><div>GBFXT</div><div>1×20DC</div><div id="v1" style="font-size:8px;color:#B0BAC9">—</div><div><span class="apill ns" id="p1">Not Started</span></div></div>
+            <div class="tr" id="s5r2"><div><div class="tr-ref">PO-2026-0844</div><div class="tr-lot">LOT-BD001 · Supplier C</div></div><div>BDDAC</div><div>NLANR</div><div>3×40HC</div><div id="v2" style="font-size:8px;color:#B0BAC9">—</div><div><span class="apill ns" id="p2">Not Started</span></div></div>
+            <div class="tr" id="s5r3"><div><div class="tr-ref">PO-2026-0846</div><div class="tr-lot">LOT-CN005 · Supplier E</div></div><div>CNSWA</div><div>DEHAM</div><div>2×40HC</div><div id="v3" style="font-size:8px;color:#B0BAC9">—</div><div><span class="apill ns" id="p3">Not Started</span></div></div>
           </div>
         </div>
       </div>
-
-      <!-- Right: Trace log (slides in) -->
       <div class="s5-trace" id="s5-trace">
         <div class="tp-hdr">
           <div class="tp-toprow"><div class="tp-badge">PRE-ASSIGN TRACE LOG</div><div class="tp-x">✕</div></div>
-          <div class="tp-ref">MB000521687</div>
-          <div class="tp-lot">521687-BCN-1</div>
-          <div class="tp-status"><div class="pill-hold">⏸ On Hold</div><div class="tp-cargo">GENERAL CARGO</div></div>
+          <div class="tp-ref">PO-2026-0846</div><div class="tp-lot">LOT-CN005</div>
+          <div class="tp-status"><div class="pill-exc">⚠ Exception</div><div class="tp-cargo">GENERAL CARGO</div></div>
           <div class="tp-meta">
-            <div><div class="tp-mi-l">Lane</div><div class="tp-mi-v">CNTAO→ESBCN</div></div>
-            <div><div class="tp-mi-l">Planned TEU</div><div class="tp-mi-v">4 × 40 HC</div></div>
-            <div><div class="tp-mi-l">CRD / FOB</div><div class="tp-mi-v">24/26 / 29/26</div></div>
-            <div><div class="tp-mi-l">LDD</div><div class="tp-mi-v">2026-09-20</div></div>
+            <div><div class="tp-mi-l">Lane</div><div class="tp-mi-v">CNSWA→DEHAM</div></div>
+            <div><div class="tp-mi-l">Planned TEU</div><div class="tp-mi-v">2 × 40 HC</div></div>
+            <div><div class="tp-mi-l">CRD / FOB</div><div class="tp-mi-v">28/26 / 30/26</div></div>
+            <div><div class="tp-mi-l">LDD</div><div class="tp-mi-v">2026-09-05</div></div>
           </div>
         </div>
         <div class="tp-body">
           <div class="tp-sec">5-Step Execution Pipeline</div>
-          <div class="pstep">
-            <div class="pstep-icon">⏸</div>
-            <div class="pstep-body">
-              <div class="pstep-title">Filter Available PO</div>
-              <div class="pstep-desc"><span class="pstep-hl">‖ On Hold:</span> CRD (24/26) is 5 weeks before FOB (29/26) — exceeds 4-week maximum. LOT not found in Early Shipment List. ON_HOLD: request too early.</div>
-              <div class="pstep-expand">› Expand Input / Output / Rule</div>
-            </div>
-            <div class="pstep-ms">64ms</div>
-          </div>
+          <div class="ps pass"><div class="ps-icon">✓</div><div class="ps-body"><div class="ps-title">Filter Available PO</div><div class="ps-desc">CRD/FOB buffer 2 weeks — within range. Delivery rule passed.</div></div><div class="ps-ms">41ms</div></div>
+          <div class="ps pass"><div class="ps-icon">✓</div><div class="ps-body"><div class="ps-title">Match Candidate Carriers</div><div class="ps-desc">3 carriers found for CNSWA→DEHAM.</div></div><div class="ps-ms">28ms</div></div>
+          <div class="ps pass"><div class="ps-icon">✓</div><div class="ps-body"><div class="ps-title">Allocation Check</div><div class="ps-desc">CMDU W30 quota available.</div></div><div class="ps-ms">35ms</div></div>
+          <div class="ps fail"><div class="ps-icon">✗</div><div class="ps-body"><div class="ps-title">Match Vessel Voyage</div><div class="ps-desc"><span class="ps-hl">EXCEPTION (noVoyage):</span> No vessel on CNSWA→DEHAM within ETD window [2026-07-16 → 2026-07-24] with ETA ≤ LDD 2026-09-05.</div></div><div class="ps-ms">89ms</div></div>
+          <div class="ps skip"><div class="ps-icon">—</div><div class="ps-body"><div class="ps-title">Automated Pre-Assign</div><div class="ps-desc">Skipped — step 4 failed.</div></div><div class="ps-ms"></div></div>
           <div class="ai-box" id="aibox">
-            <div class="ai-hdr">
-              <div class="ai-icon">✦</div>
-              <div class="ai-name">AI AGENT</div>
-              <div class="ai-st">· Pre-Assign Engine paused — input required</div>
-            </div>
-            <div class="ai-body">
-              MB000521687 is <span class="ai-hl-b">5 weeks ahead</span> of FOB (CRD: W24 / 2026, FOB: W29 / 2026). This LOT is <span class="ai-hl-r">not in the Early Shipment List</span> — OWIM approval is required before we can proceed.
-            </div>
+            <div class="ai-hdr"><div class="ai-icon">✦</div><div class="ai-name">AI AGENT</div><div class="ai-st">· Exception — operator action required</div></div>
+            <div class="ai-body"><span class="ai-hl-r">EXCEPTION (noVoyage)</span> — No voyage found for <span class="ai-hl-b">LOT-CN005</span> on CNSWA→DEHAM. No sailing meets the LDD constraint. Choose how to proceed:</div>
             <div class="ai-acts">
-              <button class="ai-pri" id="send-btn">✈ Send to OWIM for approval</button>
-              <button class="ai-sec">Keep ON_HOLD</button>
-              <button class="ai-sec">Skip</button>
+              <button class="ai-pri" id="send-btn">⚠ Escalate to Operations</button>
+              <button class="ai-sec">↻ Adjust Window</button>
+              <button class="ai-sec">⏸ Hold LOT</button>
             </div>
-            <div class="email-ok" id="email-ok">
-              <div class="email-check">✅</div>
-              <div class="email-msg">Email sent to OWIM</div>
-              <div class="email-sub">Awaiting approval · LOT 521687-BCN-1</div>
-            </div>
+            <div class="email-ok" id="email-ok"><div class="email-check">📨</div><div class="email-msg">Escalated to Operations</div><div class="email-sub">Team notified · LOT-CN005 · noVoyage</div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- ══ S6: BRAND CLOSE ══ -->
   <div class="scene" id="s6">
     <div class="s6-wrap">
       <div class="s6-by">MOOV LOGISTICS</div>
       <div class="s6-brand">Smart<span>Allocation</span></div>
       <div class="s6-divider"></div>
-      <div class="s6-tagline">The future of logistics automation.</div>
-      <div class="s6-carriers">
-        <span class="s6-ctag">CMA CGM</span><span class="s6-ctag">Hapag-Lloyd</span>
-        <span class="s6-ctag">MSC</span><span class="s6-ctag">Maersk</span>
-        <span class="s6-ctag">COSCO</span><span class="s6-ctag">Tailwind</span>
-      </div>
+      <div class="s6-slogan">Beyond Booking. <strong>Pure Orchestration.</strong></div>
+      <div class="s6-tagline">Logic over Labor. The end of manual booking.</div>
+      <div class="s6-carriers"><span class="s6-ctag">CMA CGM</span><span class="s6-ctag">Hapag-Lloyd</span><span class="s6-ctag">MSC</span><span class="s6-ctag">Maersk</span><span class="s6-ctag">COSCO</span><span class="s6-ctag">Tailwind</span></div>
       <div class="s6-url">moov-logistics.github.io/smartallocation</div>
     </div>
   </div>
-
-  <!-- Toast notification -->
-  <div class="toast" id="toast">
-    <div class="toast-icon">✓</div>
-    <div class="toast-left">
-      <div>Email sent · z.benny@moovlogistics.com</div>
-      <div class="toast-sub">Recipient notified · just now</div>
-    </div>
-  </div>
-
-  <!-- HUD -->
+  <div class="toast" id="toast"><div class="toast-icon">✓</div><div class="toast-left"><div>Escalation sent · operations@moovlogistics.com</div><div class="toast-sub">Team notified · just now</div></div></div>
   <div class="hud-bar"><div class="hud-fill" id="hf"></div></div>
-  <div class="hud-dots">
-    <div class="hud-dot" id="d0"></div><div class="hud-dot" id="d1"></div>
-    <div class="hud-dot" id="d2"></div><div class="hud-dot" id="d3"></div>
-    <div class="hud-dot" id="d4"></div><div class="hud-dot" id="d5"></div>
-  </div>
+  <div class="hud-dots"><div class="hud-dot" id="d0"></div><div class="hud-dot" id="d1"></div><div class="hud-dot" id="d2"></div><div class="hud-dot" id="d3"></div><div class="hud-dot" id="d4"></div><div class="hud-dot" id="d5"></div></div>
   <div class="hud-time" id="htimer">0:00</div>
 </div>
-
 <script>
-  // Particles
-  (function(){
-    const c=document.getElementById('particles');
-    for(let i=0;i<22;i++){
-      const p=document.createElement('div');p.className='particle';
-      const sz=Math.random()*2.5+.8;
-      p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;`+
-        `bottom:${Math.random()*8}%;animation-duration:${10+Math.random()*14}s;`+
-        `animation-delay:${Math.random()*14}s;opacity:${Math.random()*.5+.2}`;
-      c.appendChild(p);
-    }
-  })();
-
-  // Scenes: [id, startMs, durationMs]
-  const SCENES=[
-    ['s1', 0,     5000],
-    ['s2', 5000,  9000],
-    ['s3', 14000, 12000],
-    ['s4', 26000, 17000],
-    ['s5', 43000, 18000],
-    ['s6', 61000, 7000],
-  ];
-  const TOTAL=68000;
-  let origin=performance.now(), fired={};
-  const easeOut=t=>1-Math.pow(1-t,3);
-
-  function countUp(el,target,dec,dur,suffix=''){
-    const t0=performance.now();
-    (function tick(now){
-      const p=Math.min((now-t0)/dur,1),v=easeOut(p)*target;
-      el.textContent=(dec>0?v.toFixed(dec):Math.floor(v))+suffix;
-      if(p<1)requestAnimationFrame(tick);
-    })(t0);
-  }
-
-  const VESSELS=['CMA CGM · PALOMA · V026W','Hapag-Lloyd · VENICE · V045E','MSC · ALANYA · V033N'];
-
-  function onStart(id){
-    if(id==='s2'){
-      countUp(document.getElementById('cn0'),5000,0,2500,'+');
-    }
-    if(id==='s3'){
-      setTimeout(()=>document.getElementById('s3-cards').classList.add('show'),5000);
-    }
-    if(id==='s4'){
-      let n=0;
-      [[0,2000,3500],[1,4800,6200],[2,7500,9000]].forEach(([i,t1,t2])=>{
-        setTimeout(()=>{const p=document.getElementById('p'+i);p.className='apill run';p.textContent='Running…';},t1);
-        setTimeout(()=>{
-          const p=document.getElementById('p'+i);p.className='apill ok';p.textContent='✓ Pre-Assigned';
-          const v=document.getElementById('v'+i);v.textContent=VESSELS[i];v.style.color='#4A5568';
-          n++;document.getElementById('sn-ok').textContent=n;
-        },t2);
-      });
-      setTimeout(()=>{const p=document.getElementById('p3');p.className='apill run';p.textContent='Running…';},10500);
-      setTimeout(()=>{const p=document.getElementById('p3');p.className='apill hold';p.textContent='⏸ On Hold';},12000);
-    }
-    if(id==='s5'){
-      // t+0: spotlight on hold row, dim others
-      document.getElementById('s5r3').classList.add('spotlight');
-      ['s5r0','s5r1','s5r2'].forEach(id=>document.getElementById(id).classList.add('dimmed'));
-      // t+2s: trace log slides in
-      setTimeout(()=>document.getElementById('s5-trace').classList.add('slide-in'),2000);
-      // t+8s: AI agent appears
-      setTimeout(()=>document.getElementById('aibox').classList.add('show'),8000);
-      // t+12s: button glow
-      setTimeout(()=>document.getElementById('send-btn').classList.add('glow'),12000);
-      // t+13.5s: click animation
-      setTimeout(()=>{
-        const btn=document.getElementById('send-btn');
-        btn.classList.remove('glow');btn.classList.add('clicking');
-        setTimeout(()=>{btn.classList.remove('clicking');btn.textContent='⟳ Sending…';},220);
-      },13500);
-      // t+15.5s: success
-      setTimeout(()=>{
-        document.getElementById('email-ok').classList.add('show');
-        document.getElementById('s5p3').className='apill pending';
-        document.getElementById('s5p3').textContent='📧 Pending Approval';
-        document.getElementById('toast').classList.add('show');
-      },15500);
-    }
-  }
-
-  function reset(){
-    fired={};
-    // S4
-    for(let i=0;i<4;i++){
-      const p=document.getElementById('p'+i);if(p){p.className='apill ns';p.textContent='Not Started';}
-      const v=document.getElementById('v'+i);if(v){v.textContent='—';v.style.color='#B0BAC9';}
-    }
-    const sn=document.getElementById('sn-ok');if(sn)sn.textContent='0';
-    // S2
-    const c0=document.getElementById('cn0');if(c0)c0.textContent='0';
-    // S3
-    const sc=document.getElementById('s3-cards');if(sc)sc.classList.remove('show');
-    // S5
-    ['s5r0','s5r1','s5r2'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('dimmed');});
-    const r3=document.getElementById('s5r3');if(r3)r3.classList.remove('spotlight');
-    const tr=document.getElementById('s5-trace');if(tr)tr.classList.remove('slide-in');
-    const ab=document.getElementById('aibox');if(ab)ab.classList.remove('show');
-    const sb=document.getElementById('send-btn');
-    if(sb){sb.classList.remove('glow','clicking');sb.textContent='✈ Send to OWIM for approval';}
-    const eo=document.getElementById('email-ok');if(eo)eo.classList.remove('show');
-    const s5p3=document.getElementById('s5p3');
-    if(s5p3){s5p3.className='apill hold';s5p3.textContent='⏸ On Hold';}
-    const t=document.getElementById('toast');if(t)t.classList.remove('show');
-  }
-
-  function frame(now){
-    const elapsed=(now-origin)%TOTAL;
-    document.getElementById('hf').style.width=(elapsed/TOTAL*100)+'%';
-    const s=Math.floor(elapsed/1000);
-    document.getElementById('htimer').textContent=Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');
-    SCENES.forEach(([id,st,d],i)=>{
-      const el=document.getElementById(id),dot=document.getElementById('d'+i);
-      const on=elapsed>=st&&elapsed<st+d;
-      el.classList.toggle('active',on);
-      if(dot)dot.classList.toggle('on',on);
-      if(on&&!fired[id]){fired[id]=true;onStart(id);}
+(function(){const c=document.getElementById('particles');for(let i=0;i<22;i++){const p=document.createElement('div');p.className='particle';const sz=Math.random()*2.5+.8;p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;bottom:'+(Math.random()*8)+'%;animation-duration:'+(10+Math.random()*14)+'s;animation-delay:'+(Math.random()*14)+'s;opacity:'+(Math.random()*.5+.2);c.appendChild(p);}})();
+const SCENES=[['s1',0,6000],['s2',6000,10000],['s3',16000,9000],['s4',25000,13000],['s5',38000,17000],['s6',55000,8000]];
+const TOTAL=63000;let origin=performance.now(),fired={};
+const easeOut=t=>1-Math.pow(1-t,3);
+const VESSELS=['CMA CGM · PALOMA · V026W','Hapag-Lloyd · VENICE · V045E','MSC · ALANYA · V033N'];
+function animatePath(dur){const p=document.getElementById('tl-fill');if(!p)return;const len=2500;p.style.strokeDashoffset=len;const t0=performance.now();(function tick(now){const pct=Math.min((now-t0)/dur,1);p.style.strokeDashoffset=len*(1-easeOut(pct));if(pct<1)requestAnimationFrame(tick);})(t0);}
+function litNode(i){const n=document.getElementById('tn'+i),k=document.getElementById('tk'+i);if(n){n.setAttribute('fill','rgba(74,222,128,0.18)');n.setAttribute('stroke','#4ade80');}if(k)k.setAttribute('opacity','1');}
+function onStart(id){
+  if(id==='s4'){animatePath(11000);[1,2,3,4,5,6].forEach((n,i)=>setTimeout(()=>litNode(n),i*1700+400));}
+  if(id==='s5'){
+    setTimeout(()=>{const b=document.getElementById('run-btn');if(b){b.style.background='#FE5000';b.textContent='▶ Running…';}},800);
+    [[0,1200,2600],[1,3000,4400],[2,5000,6400]].forEach(([i,t1,t2])=>{
+      setTimeout(()=>{const p=document.getElementById('p'+i);p.className='apill run';p.textContent='Running…';},t1);
+      setTimeout(()=>{const p=document.getElementById('p'+i);p.className='apill ok';p.textContent='✓ Pre-Assigned';const v=document.getElementById('v'+i);v.textContent=VESSELS[i];v.style.color='#4A5568';},t2);
     });
-    if(elapsed<150&&Object.keys(fired).length>0)reset();
-    requestAnimationFrame(frame);
+    setTimeout(()=>{document.getElementById('p3').className='apill run';document.getElementById('p3').textContent='Running…';},7200);
+    setTimeout(()=>{document.getElementById('p3').className='apill exc';document.getElementById('p3').textContent='⚠ Exception';},8700);
+    setTimeout(()=>{document.getElementById('s5r3').classList.add('spotlight');['s5r0','s5r1','s5r2'].forEach(id=>document.getElementById(id).classList.add('dimmed'));},8900);
+    setTimeout(()=>document.getElementById('s5-trace').classList.add('slide-in'),9700);
+    setTimeout(()=>document.getElementById('aibox').classList.add('show'),12800);
+    setTimeout(()=>document.getElementById('send-btn').classList.add('glow'),14800);
+    setTimeout(()=>{const btn=document.getElementById('send-btn');btn.classList.remove('glow');btn.style.transform='scale(0.95)';setTimeout(()=>{btn.style.transform='';btn.textContent='⟳ Sending…';},200);},15800);
+    setTimeout(()=>{document.getElementById('email-ok').classList.add('show');document.getElementById('toast').classList.add('show');},17000);
   }
+}
+function reset(){
+  fired={};const fill=document.getElementById('tl-fill');if(fill)fill.style.strokeDashoffset='2500';
+  for(let i=1;i<=6;i++){const n=document.getElementById('tn'+i);if(n){n.setAttribute('fill','#002f4f');n.setAttribute('stroke','rgba(255,255,255,0.18)');}const k=document.getElementById('tk'+i);if(k)k.setAttribute('opacity','0');}
+  for(let i=0;i<4;i++){const p=document.getElementById('p'+i);if(p){p.className='apill ns';p.textContent='Not Started';}const v=document.getElementById('v'+i);if(v){v.textContent='—';v.style.color='#B0BAC9';}}
+  const rb=document.getElementById('run-btn');if(rb){rb.style.background='';rb.textContent='▶ Run All Not-Started';}
+  ['s5r0','s5r1','s5r2','s5r3'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('spotlight','dimmed');});
+  const tr=document.getElementById('s5-trace');if(tr)tr.classList.remove('slide-in');
+  const ab=document.getElementById('aibox');if(ab)ab.classList.remove('show');
+  const sb=document.getElementById('send-btn');if(sb){sb.classList.remove('glow');sb.style.transform='';sb.textContent='⚠ Escalate to Operations';}
+  const eo=document.getElementById('email-ok');if(eo)eo.classList.remove('show');
+  const t=document.getElementById('toast');if(t)t.classList.remove('show');
+}
+function frame(now){
+  const elapsed=(now-origin)%TOTAL;
+  document.getElementById('hf').style.width=(elapsed/TOTAL*100)+'%';
+  const s=Math.floor(elapsed/1000);document.getElementById('htimer').textContent=Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');
+  SCENES.forEach(([id,st,d],i)=>{const el=document.getElementById(id),dot=document.getElementById('d'+i);const on=elapsed>=st&&elapsed<st+d;el.classList.toggle('active',on);if(dot)dot.classList.toggle('on',on);if(on&&!fired[id]){fired[id]=true;onStart(id);}});
+  if(elapsed<150&&Object.keys(fired).length>0)reset();
   requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
 </script>
 </body>
 </html>
